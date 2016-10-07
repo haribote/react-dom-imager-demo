@@ -1,0 +1,14 @@
+.Editor {
+}
+
+.Editor textarea {
+    display: block;
+    width: 100%;
+    height: calc(50vh - (190px / 2));
+    box-sizing: border-box;
+    border: 3px inset;
+    resize: none;
+    background: #202020;
+    color: #ccc;
+    font-size: 1rem;
+}
