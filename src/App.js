@@ -7,11 +7,11 @@ import CssEditor from './CssEditor';
 
 /**
  * @const action types
- * @type {{UPDATE_HTML_STRING: string, UPDATE_CSS_STRING: string}}
+ * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string}}
  */
 const ACTIONS = {
-  UPDATE_HTML_STRING: 'UPDATE_HTML_STRING',
-  UPDATE_CSS_STRING : 'UPDATE_CSS_STRING'
+  UPDATE_HTML_CODE: 'UPDATE_HTML_CODE',
+  UPDATE_CSS_CODE : 'UPDATE_CSS_CODE'
 };
 
 /**
@@ -20,12 +20,12 @@ const ACTIONS = {
 class App extends Component {
   /**
    * @static
-   * @returns {{htmlString: string}}
+   * @returns {{htmlCode: string, cssCode: string}}
    */
   static get initialState() {
     return {
-      htmlString: '<p>Hello, world!</p>',
-      cssString : 'p { font-size: 2rem; }'
+      htmlCode: '<p>Hello, world!</p>',
+      cssCode : 'p {\n  font-size: 2rem;\n}'
     }
   }
 
@@ -41,8 +41,8 @@ class App extends Component {
 
     // create actions
     this.actions = {
-      updateHtmlString: this.crateAction(ACTIONS.UPDATE_HTML_STRING),
-      updateCssString: this.crateAction(ACTIONS.UPDATE_CSS_STRING)
+      updateHtmlCode: this.crateAction(ACTIONS.UPDATE_HTML_CODE),
+      updateCssCode: this.crateAction(ACTIONS.UPDATE_CSS_CODE)
     };
 
     // bind context
@@ -81,14 +81,14 @@ class App extends Component {
   reduce(type, payload) {
     switch (type) {
 
-    case ACTIONS.UPDATE_HTML_STRING:
+    case ACTIONS.UPDATE_HTML_CODE:
       return {
-        htmlString: payload
+        htmlCode: payload
       };
 
-    case ACTIONS.UPDATE_CSS_STRING:
+    case ACTIONS.UPDATE_CSS_CODE:
       return {
-        cssString: payload
+        cssCode: payload
       };
 
     default:
@@ -101,8 +101,8 @@ class App extends Component {
    * @returns {XML}
    */
   render() {
-    const { htmlString, cssString } = this.state;
-    const { updateHtmlString, updateCssString } = this.actions;
+    const { htmlCode, cssCode } = this.state;
+    const { updateHtmlCode, updateCssCode } = this.actions;
 
     return (
       <div className="App">
@@ -113,8 +113,8 @@ class App extends Component {
         <div className="App-main">
           <Viewer className="App-column" />
           <div className="App-column">
-            <HtmlEditor value={htmlString} dispatch={this.dispatch} actions={{ updateHtmlString }} />
-            <CssEditor value={cssString} dispatch={this.dispatch} actions={{ updateCssString }} />
+            <HtmlEditor value={htmlCode} dispatch={this.dispatch} actions={{ updateHtmlCode }} />
+            <CssEditor value={cssCode} dispatch={this.dispatch} actions={{ updateCssCode }} />
           </div>
         </div>
       </div>
