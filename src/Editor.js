@@ -25,8 +25,10 @@ export default class Editor extends CommonComponent {
    * @param props
    */
   constructor(props) {
+    // inherit
     super(props);
 
+    // bind context
     this.bindContextAll(
       '_submitHandler',
       '_changeHandler'

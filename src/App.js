@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BaseComponent } from './CommonComponent';
 import Viewer from './Viewer';
-import HtmlEditor from './HtmlEditor';
-import CssEditor from './CssEditor';
+import Editor from './Editor';
 
 /**
  * @const action types
@@ -17,7 +17,7 @@ const ACTIONS = {
 /**
  * App container class
  */
-class App extends Component {
+class App extends BaseComponent {
   /**
    * @static
    * @returns {{htmlCode: string, cssCode: string}}
@@ -46,7 +46,11 @@ class App extends Component {
     };
 
     // bind context
-    this.dispatch = this.dispatch.bind(this);
+    this.bindContextAll(
+      'dispatch',
+      '_changeHtmlCodeHandler',
+      '_changeCssCodeHandler'
+    );
   }
 
   /**
@@ -102,7 +106,6 @@ class App extends Component {
    */
   render() {
     const { htmlCode, cssCode } = this.state;
-    const { updateHtmlCode, updateCssCode } = this.actions;
 
     return (
       <div className="App">
@@ -113,12 +116,38 @@ class App extends Component {
         <div className="App-main">
           <Viewer className="App-column" />
           <div className="App-column">
-            <HtmlEditor value={htmlCode} dispatch={this.dispatch} actions={{ updateHtmlCode }} />
-            <CssEditor value={cssCode} dispatch={this.dispatch} actions={{ updateCssCode }} />
+            <Editor className="HtmlEditor" name="html" value={htmlCode} onChange={this._changeHtmlCodeHandler} />
+            <Editor className="CssEditor" name="html" value={cssCode} onChange={this._changeCssCodeHandler} />
           </div>
         </div>
       </div>
     );
+  }
+
+  /**
+   * @listen change <textarea name="html" />
+   * @param value
+   * @private
+   */
+  _changeHtmlCodeHandler(value) {
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.updateHtmlCode(value));
+  }
+
+  /**
+   * @listen change <textarea  name="css" />
+   * @param value
+   * @private
+   */
+  _changeCssCodeHandler(value) {
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.updateCssCode(value));
   }
 }
 
