@@ -41,8 +41,8 @@ class App extends BaseComponent {
 
     // create actions
     this.actions = {
-      updateHtmlCode: this.crateAction(ACTIONS.UPDATE_HTML_CODE),
-      updateCssCode: this.crateAction(ACTIONS.UPDATE_CSS_CODE)
+      updateHtmlCode: createAction(ACTIONS.UPDATE_HTML_CODE),
+      updateCssCode: createAction(ACTIONS.UPDATE_CSS_CODE)
     };
 
     // bind context
@@ -51,17 +51,6 @@ class App extends BaseComponent {
       '_changeHtmlCodeHandler',
       '_changeCssCodeHandler'
     );
-  }
-
-  /**
-   * action creator
-   * @param type
-   * @returns {function(this:App)}
-   */
-  crateAction(type) {
-    return function(payload) {
-      return { type, payload };
-    };
   }
 
   /**
@@ -149,6 +138,16 @@ class App extends BaseComponent {
     // dispatch action
     dispatch(actions.updateCssCode(value));
   }
+}
+
+/**
+ * action creator
+ * @returns {Function}
+ */
+export function createAction(type) {
+  return function(payload) {
+    return { type, payload };
+  };
 }
 
 export default App;
