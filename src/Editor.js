@@ -51,7 +51,7 @@ export default class Editor extends CommonComponent {
   }
 
   /**
-   * @listen submit <form />
+   * @listen submit on <form />
    * @param ev
    * @private
    */
@@ -60,7 +60,7 @@ export default class Editor extends CommonComponent {
   }
 
   /**
-   * @listen change <textarea />
+   * @listen change on <textarea />
    * @param ev
    * @private
    */

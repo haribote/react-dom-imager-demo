@@ -1,0 +1,63 @@
+.Viewer {
+    position: relative;
+    background: #eee;
+    text-align: center;
+}
+
+.Viewer-canvas {
+    display: flex;
+    height: calc(100% - 50px);
+    justify-content: center;
+    align-items: center;
+}
+
+.Viewer-canvas canvas {
+    display: block;
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0);
+    vertical-align: top;
+    transition: all 200ms ease;
+}
+
+.Viewer canvas:hover {
+    box-shadow: 0 3px 7px rgba(0, 0, 0, .6);
+}
+
+.Viewer-error {
+    font-size: 2rem;
+}
+
+.Viewer-error i {
+    font-style: normal;
+}
+
+.Viewer-command {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    height: 30px;
+}
+
+.Viewer-command p{
+    margin: 10px;
+}
+
+.Viewer-command button {
+    appearance: none;
+    margin: 0;
+    padding: 0 10px;
+    border: none;
+    background: #61DAFB;
+    color: #222;
+    font-size: 1rem;
+    line-height: 30px;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.Viewer-command button:hover {
+    background: #222;
+    color: #61DAFB;;
+}

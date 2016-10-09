@@ -4,14 +4,16 @@ import './App.css';
 import { BaseComponent } from './CommonComponent';
 import Viewer from './Viewer';
 import Editor from './Editor';
+import DomImageSvg from './DomImageSvg';
 
 /**
  * @const action types
- * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string}}
+ * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string, TOGGLE_VIEWER_ERROR: string}}
  */
 const ACTIONS = {
-  UPDATE_HTML_CODE: 'UPDATE_HTML_CODE',
-  UPDATE_CSS_CODE : 'UPDATE_CSS_CODE'
+  UPDATE_HTML_CODE   : 'UPDATE_HTML_CODE',
+  UPDATE_CSS_CODE    : 'UPDATE_CSS_CODE',
+  TOGGLE_VIEWER_ERROR: 'TOGGLE_VIEWER_ERROR'
 };
 
 /**
@@ -24,8 +26,9 @@ class App extends BaseComponent {
    */
   static get initialState() {
     return {
-      htmlCode: '<p>Hello, world!</p>',
-      cssCode : 'p {\n  font-size: 2rem;\n}'
+      htmlCode        : '<h1>Hello, world!</h1>',
+      cssCode         : 'h1 {\n  color: red;\n}',
+      isViewerDisabled: false
     }
   }
 
@@ -41,15 +44,17 @@ class App extends BaseComponent {
 
     // create actions
     this.actions = {
-      updateHtmlCode: createAction(ACTIONS.UPDATE_HTML_CODE),
-      updateCssCode: createAction(ACTIONS.UPDATE_CSS_CODE)
+      updateHtmlCode   : createAction(ACTIONS.UPDATE_HTML_CODE),
+      updateCssCode    : createAction(ACTIONS.UPDATE_CSS_CODE),
+      toggleViewerError: createAction(ACTIONS.TOGGLE_VIEWER_ERROR)
     };
 
     // bind context
     this.bindContextAll(
       'dispatch',
       '_changeHtmlCodeHandler',
-      '_changeCssCodeHandler'
+      '_changeCssCodeHandler',
+      '_errorViewerHandler'
     );
   }
 
@@ -84,6 +89,11 @@ class App extends BaseComponent {
         cssCode: payload
       };
 
+    case ACTIONS.TOGGLE_VIEWER_ERROR:
+      return {
+        isViewerDisabled: !!payload
+      };
+
     default:
       return this.state;
     }
@@ -94,8 +104,10 @@ class App extends BaseComponent {
    * @returns {XML}
    */
   render() {
-    const { htmlCode, cssCode } = this.state;
+    // cache
+    const { htmlCode, cssCode, isViewerDisabled } = this.state;
 
+    // JSX template
     return (
       <div className="App">
         <div className="App-header">
@@ -103,7 +115,7 @@ class App extends BaseComponent {
           <h2>React DOM Imager Demo</h2>
         </div>
         <div className="App-main">
-          <Viewer className="App-column" />
+          <Viewer className="App-column" svg={this.renderSvg()} isDisabled={isViewerDisabled} onError={this._errorViewerHandler} />
           <div className="App-column">
             <Editor className="HtmlEditor" name="html" value={htmlCode} onChange={this._changeHtmlCodeHandler} />
             <Editor className="CssEditor" name="html" value={cssCode} onChange={this._changeCssCodeHandler} />
@@ -114,7 +126,19 @@ class App extends BaseComponent {
   }
 
   /**
-   * @listen change <textarea name="html" />
+   * @returns {XML}
+   */
+  renderSvg() {
+    // cache
+    const { htmlCode, cssCode } = this.state;
+
+    return (
+      <DomImageSvg htmlCode={htmlCode} cssCode={cssCode} />
+    );
+  }
+
+  /**
+   * @listen change on <textarea name="html" />
    * @param value
    * @private
    */
@@ -127,7 +151,7 @@ class App extends BaseComponent {
   }
 
   /**
-   * @listen change <textarea  name="css" />
+   * @listen change on <textarea  name="css" />
    * @param value
    * @private
    */
@@ -137,6 +161,18 @@ class App extends BaseComponent {
 
     // dispatch action
     dispatch(actions.updateCssCode(value));
+  }
+
+  /**
+   * @listen error on <Viewer />
+   * @private
+   */
+  _errorViewerHandler() {
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.toggleViewerError(true));
   }
 }
 
