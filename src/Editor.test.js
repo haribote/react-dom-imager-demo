@@ -7,7 +7,7 @@ describe('Editor', () => {
     shallow(<Editor name="test" onChange={jest.fn()} />);
   });
 
-  it('call preventDefault method', () => {
+  it('calls preventDefault method', () => {
     const wrapper = shallow(<Editor name="test" onChange={jest.fn()} />);
     const mockPreventDefaultMethod = jest.fn();
     wrapper.instance()._submitHandler({
@@ -16,7 +16,7 @@ describe('Editor', () => {
     expect(mockPreventDefaultMethod).toHaveBeenCalled();
   });
 
-  it('call onChange handler with a argument', () => {
+  it('calls onChange handler with a argument', () => {
     const mockOnChangeHandler = jest.fn();
     const wrapper = shallow(<Editor name="test" onChange={mockOnChangeHandler} />);
     wrapper.instance()._changeHandler({
@@ -26,5 +26,5 @@ describe('Editor', () => {
     });
     expect(mockOnChangeHandler.mock.calls.length).toBe(1);
     expect(mockOnChangeHandler.mock.calls[0][0]).toBe('test value');
-  })
+  });
 });

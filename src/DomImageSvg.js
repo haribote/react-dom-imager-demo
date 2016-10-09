@@ -18,6 +18,9 @@ export default class DomImageSvg extends PureComponent {
     }
   }
 
+  /**
+   * @returns {{width: number, height: number}}
+   */
   static get defaultProps() {
     return {
       width    : 960,

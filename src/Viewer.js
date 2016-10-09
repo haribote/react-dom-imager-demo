@@ -6,11 +6,6 @@ import CommonComponent from './CommonComponent';
 import classNames from 'classnames';
 
 /**
- * @type {*}
- */
-const DOMURL = self.URL || self.webkitURL || self;
-
-/**
  * @type {Symbol}
  */
 const keyOfStaticSvgBlob = Symbol('staticSvgBlob');
@@ -118,18 +113,16 @@ export default class Viewer extends CommonComponent {
    * @returns {*}
    */
   drawCanvas() {
-    // cache canvas
-    const canvas  = findDOMNode(this.refs.canvas);
-    const context = canvas.getContext('2d');
-
-    if (!(canvas && context) || this.props.isDisabled) {
+    if (this.props.isDisabled) {
       return;
     }
 
     // cache
+    const canvas        = findDOMNode(this.refs.canvas);
+    const context       = canvas.getContext('2d');
     const imageEl       = new Image();
-    const staticSvgBlob = new Blob([this.renderSvgToStaticMarkup()], {type: 'image/svg+xml;charset=utf-8'});
-    const url           = DOMURL.createObjectURL(staticSvgBlob);
+    const staticSvgBlob = new Blob([this.renderSvgToStaticMarkup()], { type: 'image/svg+xml;charset=utf-8' });
+    const url           = URL.createObjectURL(staticSvgBlob);
 
     // set load event handler
     imageEl.onload = () => {
@@ -139,7 +132,7 @@ export default class Viewer extends CommonComponent {
       context.drawImage(imageEl, 0, 0);
 
       // revoke url
-      DOMURL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
     };
 
     // set error event handler
@@ -175,16 +168,16 @@ export default class Viewer extends CommonComponent {
     // set url
     switch (value) {
     case 'svg':
-      url = DOMURL.createObjectURL(this[keyOfStaticSvgBlob]);
+      url = URL.createObjectURL(this[keyOfStaticSvgBlob]);
       break;
     default:
-      break;
+      return;
     }
 
     // open in new window
     open(url, 'generatedImage');
     if (/^blob:.+$/.test(url)) {
-      DOMURL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
     }
   }
 }

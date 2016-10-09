@@ -9,17 +9,17 @@ describe('App', () => {
     shallow(<App />);
   });
 
-  it('have a Viewer component', () => {
+  it('has a Viewer component', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(Viewer).length).toBe(1);
   });
 
-  it('have two Editor component', () => {
+  it('has two Editor component', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(Editor).length).toBe(2);
   });
 
-  it('update to new state', () => {
+  it('updates to new state', () => {
     const wrapper = shallow(<App />);
     wrapper.instance().dispatch({
       type   : 'UPDATE_HTML_CODE',
@@ -28,26 +28,36 @@ describe('App', () => {
     expect(wrapper.state('htmlCode')).toBe('<p>Hello, guys!</p>');
   });
 
-  it('return new state of htmlCode', () => {
+  it('returns new state of htmlCode', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.instance().reduce('UPDATE_HTML_CODE', '<p>Hello, guys!</p>')).toEqual({
       htmlCode: '<p>Hello, guys!</p>'
     });
   });
 
-  it('return new state of cssCode', () => {
+  it('returns new state of cssCode', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.instance().reduce('UPDATE_CSS_CODE', 'p {\n  font-size: 1rem;\n}')).toEqual({
       cssCode: 'p {\n  font-size: 1rem;\n}'
     });
   });
 
-  it('return current state', () => {
+  it('returns new state of isViewerDisabled', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.instance().reduce('TOGGLE_VIEWER_ERROR', true)).toEqual({
+      isViewerDisabled: true
+    });
+    expect(wrapper.instance().reduce('TOGGLE_VIEWER_ERROR', false)).toEqual({
+      isViewerDisabled: false
+    });
+  });
+
+  it('returns current state', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.instance().reduce('UNKNOWN_ACTION', 'test value')).toEqual(wrapper.state());
   });
 
-  it('call dispatch method with UPDATE_HTML_CODE action', () => {
+  it('calls dispatch method with UPDATE_HTML_CODE action', () => {
     const wrapper = shallow(<App />);
     const instance = wrapper.instance();
     instance.dispatch = jest.fn();
@@ -59,7 +69,7 @@ describe('App', () => {
     });
   });
 
-  it('call dispatch method with UPDATE_CSS_CODE action', () => {
+  it('calls dispatch method with UPDATE_CSS_CODE action', () => {
     const wrapper = shallow(<App />);
     const instance = wrapper.instance();
     instance.dispatch = jest.fn();
@@ -70,10 +80,22 @@ describe('App', () => {
       payload: 'test value'
     });
   });
+
+  it('calls dispatch method with TOGGLE_VIEWER_ERROR action', () => {
+    const wrapper = shallow(<App />);
+    const instance = wrapper.instance();
+    instance.dispatch = jest.fn();
+    instance._errorViewerHandler();
+    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'TOGGLE_VIEWER_ERROR',
+      payload: true
+    });
+  });
 });
 
 describe('createAction', () => {
-  it('return the test action', () => {
+  it('returns the test action', () => {
     const testAction = createAction('test');
     expect(testAction('test payload')).toEqual({
       type   : 'test',
