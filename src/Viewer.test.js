@@ -27,8 +27,6 @@ describe('Viewer', () => {
   });
 
   it('opens svg in new window', () => {
-    const wrapper = mount(<Viewer svg={<DomImageSvg htmlCode="<p>Hello, world!</p>" cssCode="'p {\n  color: red;\n}'" />} onError={() => {}} />);
-    const mockPreventDefaultMethod = jest.fn();
     Object.assign(self, {
       open: sinon.spy()
     });
@@ -38,6 +36,8 @@ describe('Viewer', () => {
       }),
       revokeObjectURL: sinon.spy()
     });
+    const wrapper = mount(<Viewer svg={<DomImageSvg htmlCode="<p>Hello, world!</p>" cssCode="'p {\n  color: red;\n}'" />} onError={() => {}} />);
+    const mockPreventDefaultMethod = jest.fn();
     wrapper.instance().clickDownloadButtonHandler({
       preventDefault: mockPreventDefaultMethod,
       target        : {
@@ -45,9 +45,7 @@ describe('Viewer', () => {
       }
     });
     expect(mockPreventDefaultMethod).toHaveBeenCalled();
-    expect(URL.createObjectURL.calledOnce).toBe(true);
     expect(open.calledWith('blob:http:', 'generatedImage')).toBe(true);
-    expect(URL.revokeObjectURL.calledWith('blob:http:')).toBe(true);
   });
 
 
