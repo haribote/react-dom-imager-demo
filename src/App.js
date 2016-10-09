@@ -118,7 +118,7 @@ class App extends BaseComponent {
           <Viewer className="App-column" svg={this.renderSvg()} isDisabled={isViewerDisabled} onError={this._errorViewerHandler} />
           <div className="App-column">
             <Editor className="HtmlEditor" name="html" value={htmlCode} onChange={this._changeHtmlCodeHandler} />
-            <Editor className="CssEditor" name="html" value={cssCode} onChange={this._changeCssCodeHandler} />
+            <Editor className="CssEditor" name="css" value={cssCode} onChange={this._changeCssCodeHandler} />
           </div>
         </div>
       </div>
