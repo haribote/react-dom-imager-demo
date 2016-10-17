@@ -10,17 +10,19 @@ import DomImageSvg from './DomImageSvg';
 import Modal from './Modal';
 import Tabs from './Tabs';
 import TabItem from './TabItem';
+import SampleImage from './SampleImage';
 
 /**
  * @const action types
- * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string, TOGGLE_VIEWER_ERROR: string, TOGGLE_MODAL_VISIBLE: string, CHANGE_TAB_ITEM: string}}
+ * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string, TOGGLE_VIEWER_ERROR: string, TOGGLE_MODAL_VISIBLE: string, CHANGE_TAB_ITEM: string, RENDERED_SAMPLE_IMAGE: string}}
  */
 const ACTIONS = {
-  UPDATE_HTML_CODE    : 'UPDATE_HTML_CODE',
-  UPDATE_CSS_CODE     : 'UPDATE_CSS_CODE',
-  TOGGLE_VIEWER_ERROR : 'TOGGLE_VIEWER_ERROR',
-  TOGGLE_MODAL_VISIBLE: 'TOGGLE_MODAL_VISIBLE',
-  CHANGE_TAB_ITEM     : 'CHANGE_TAB_ITEM'
+  UPDATE_HTML_CODE     : 'UPDATE_HTML_CODE',
+  UPDATE_CSS_CODE      : 'UPDATE_CSS_CODE',
+  TOGGLE_VIEWER_ERROR  : 'TOGGLE_VIEWER_ERROR',
+  TOGGLE_MODAL_VISIBLE : 'TOGGLE_MODAL_VISIBLE',
+  CHANGE_TAB_ITEM      : 'CHANGE_TAB_ITEM',
+  RENDERED_SAMPLE_IMAGE: 'RENDERED_SAMPLE_IMAGE'
 };
 
 /**
@@ -33,11 +35,13 @@ class App extends BaseComponent {
    */
   static get initialState() {
     return {
-      htmlCode        : '<h1>Hello, world!</h1>',
-      cssCode         : 'h1 {\n  color: red;\n}',
-      isViewerDisabled: false,
-      isModalVisible  : false,
-      activeTabItemId : 'sample-html'
+      htmlCode           : '<h1>Hello, world!</h1>',
+      cssCode            : 'h1 {\n  color: red;\n}',
+      isViewerDisabled   : false,
+      isModalVisible     : false,
+      activeTabItemId    : 'sample-html',
+      sampleImageFullPath: '',
+      sampleImageDataUri : ''
     }
   }
 
@@ -53,11 +57,12 @@ class App extends BaseComponent {
 
     // create actions
     this.actions = {
-      updateHtmlCode    : createAction(ACTIONS.UPDATE_HTML_CODE),
-      updateCssCode     : createAction(ACTIONS.UPDATE_CSS_CODE),
-      toggleViewerError : createAction(ACTIONS.TOGGLE_VIEWER_ERROR),
-      toggleModalVisible: createAction(ACTIONS.TOGGLE_MODAL_VISIBLE),
-      changeTabItem     : createAction(ACTIONS.CHANGE_TAB_ITEM)
+      updateHtmlCode     : createAction(ACTIONS.UPDATE_HTML_CODE),
+      updateCssCode      : createAction(ACTIONS.UPDATE_CSS_CODE),
+      toggleViewerError  : createAction(ACTIONS.TOGGLE_VIEWER_ERROR),
+      toggleModalVisible : createAction(ACTIONS.TOGGLE_MODAL_VISIBLE),
+      changeTabItem      : createAction(ACTIONS.CHANGE_TAB_ITEM),
+      renderedSampleImage: createAction(ACTIONS.RENDERED_SAMPLE_IMAGE)
     };
 
     // bind context
@@ -68,7 +73,8 @@ class App extends BaseComponent {
       '_errorViewerHandler',
       '_clickModalOpenerHandler',
       '_clickModalCloserHandler',
-      '_clickTabHandler'
+      '_clickTabHandler',
+      '_renderSampleImageHandler'
     );
   }
 
@@ -118,6 +124,15 @@ class App extends BaseComponent {
         activeTabItemId: payload
       };
 
+    case ACTIONS.RENDERED_SAMPLE_IMAGE:
+      return (() => {
+        const { sampleImageFullPath, sampleImageDataUri} = payload;
+        return {
+          sampleImageFullPath,
+          sampleImageDataUri
+        };
+      })();
+
     default:
       return this.state;
     }
@@ -129,7 +144,7 @@ class App extends BaseComponent {
    */
   render() {
     // cache
-    const { htmlCode, cssCode, isViewerDisabled, isModalVisible, activeTabItemId } = this.state;
+    const { htmlCode, cssCode, isViewerDisabled, isModalVisible, activeTabItemId, sampleImageFullPath, sampleImageDataUri } = this.state;
 
     // JSX template
     return (
@@ -172,9 +187,14 @@ class App extends BaseComponent {
                   </pre>
                 </TabItem>
                 <TabItem id="sample-image" title="Image">
-                  <div className="Sample-image">
-                    <img src={sampleImage} width={400} height={382} alt="Trick or treat" style={{ maxWidth: '100%' }} />
-                  </div>
+                  <SampleImage
+                    src={sampleImage}
+                    width={400}
+                    height={382}
+                    fullPath={sampleImageFullPath}
+                    dataUri={sampleImageDataUri}
+                    onRendered={this._renderSampleImageHandler}
+                  />
                 </TabItem>
               </Tabs>
             </Modal>
@@ -279,6 +299,23 @@ class App extends BaseComponent {
 
     // dispatch action
     dispatch(actions.changeTabItem(id));
+  }
+
+  /**
+   * @listen rendered on (.SampleImage canvas)
+   * @param props
+   * @private
+   */
+  _renderSampleImageHandler(props) {
+    // cache
+    const { dispatch, actions } = this;
+    const { fullPath, dataUri } = props;
+
+    // dispatch action
+    dispatch(actions.renderedSampleImage({
+      sampleImageFullPath: fullPath,
+      sampleImageDataUri : dataUri
+    }));
   }
 }
 

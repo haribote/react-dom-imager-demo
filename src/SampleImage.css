@@ -1,0 +1,30 @@
+.SampleImage {
+    display: flex;
+}
+
+.SampleImage canvas {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}
+
+.SampleImage input[readonly],
+.SampleImage textarea[readonly] {
+    appearance: none;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #eee;
+    font-size: 1rem;
+}
+
+.SampleImage textarea[readonly] {
+    resize: none;
+    min-height: 18rem;
+}
+
+.SampleImage-column {
+    width: 50%;
+}

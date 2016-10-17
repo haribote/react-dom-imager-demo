@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import './Modal.css';
 import CommonComponent from './CommonComponent';
-// import classNames from 'classnames';
 
 /**
  * Modal class
