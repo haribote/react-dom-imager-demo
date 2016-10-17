@@ -1,0 +1,58 @@
+.Modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: scroll;
+}
+
+.Modal.fade-transition-enter {
+    opacity: 0.01;
+}
+
+.Modal.fade-transition-enter.fade-transition-enter-active {
+    opacity: 1;
+    transition: opacity 200ms ease;
+}
+
+.Modal.fade-transition-leave {
+    opacity: 1;
+}
+
+.Modal.fade-transition-leave.fade-transition-leave-active {
+    opacity: 0.01;
+    transition: opacity 200ms ease;
+}
+
+.Modal-background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .6);
+}
+
+.Modal-container {
+    position: relative;
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 15px;
+    background: #fff;
+}
+
+.Modal-header,
+.Modal-footer {
+    text-align: center;
+}
+
+.Modal-body {
+    min-height: 450px;
+}
+
+.Modal-footer {}
+
+.Modal-footer button {
+    margin-top: 15px;
+}
