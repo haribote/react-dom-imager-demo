@@ -11,6 +11,11 @@ import classNames from 'classnames';
 const keyOfStaticSvgBlob = Symbol('staticSvgBlob');
 
 /**
+ * @type {string|*}
+ */
+let lastSvgUrl;
+
+/**
  * Viewer component class
  */
 export default class Viewer extends CommonComponent {
@@ -175,9 +180,10 @@ export default class Viewer extends CommonComponent {
     }
 
     // open in new window
-    open(url, 'generatedImage');
-    if (/^blob:.+$/.test(url)) {
-      URL.revokeObjectURL(url);
+    if (lastSvgUrl) {
+      URL.revokeObjectURL(lastSvgUrl);
     }
+    lastSvgUrl = url;
+    open(lastSvgUrl, 'generatedImage');
   }
 }
