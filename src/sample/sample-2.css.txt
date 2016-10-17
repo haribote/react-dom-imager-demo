@@ -1,0 +1,27 @@
+h1 {
+  text-align: center;
+}
+table {
+  width: 100%;
+  font-size: 1rem;
+  border: 3px solid #000;
+  border-collapse: collapse;
+}
+thead th,
+thead td {
+  border-bottom: 3px double #000;
+}
+tfoot th,
+tfoot td {
+  border-top: 3px double #000;
+}
+tfoot th {
+  text-align: left;
+}
+th, td {
+  padding: .5rem;
+  border: 1px solid #000;
+}
+.number {
+  text-align: right;
+}

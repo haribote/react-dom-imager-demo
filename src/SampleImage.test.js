@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import SampleImage from './SampleImage';
-import sampleImage from './sample-image.png';
+import sampleImage from './sample/sample-image.png';
 
 describe('SampleImage', () => {
   it('renders without crashing', () => {

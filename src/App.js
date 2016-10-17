@@ -1,7 +1,11 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import logo from './logo.svg';
-import sampleImage from './sample-image.png';
+import htmlSample1 from 'raw!./sample/sample-1.html.txt';
+import htmlSample2 from 'raw!./sample/sample-2.html.txt';
+import cssSample1 from 'raw!./sample/sample-1.css.txt';
+import cssSample2 from 'raw!./sample/sample-2.css.txt';
+import sampleImage from './sample/sample-image.png';
 import './App.css';
 import { BaseComponent } from './CommonComponent';
 import Viewer from './Viewer';
@@ -35,8 +39,8 @@ class App extends BaseComponent {
    */
   static get initialState() {
     return {
-      htmlCode           : '<h1>Hello, world!</h1>',
-      cssCode            : 'h1 {\n  color: red;\n}',
+      htmlCode           : htmlSample1,
+      cssCode            : cssSample1,
       isViewerDisabled   : false,
       isModalVisible     : false,
       activeTabItemId    : 'sample-html',
@@ -178,11 +182,21 @@ class App extends BaseComponent {
                       {App.initialState.htmlCode}
                     </code>
                   </pre>
+                  <pre>
+                    <code>
+                      {htmlSample2}
+                    </code>
+                  </pre>
                 </TabItem>
                 <TabItem id="sample-css" title="CSS">
                   <pre>
                     <code>
                       {App.initialState.cssCode}
+                    </code>
+                  </pre>
+                  <pre>
+                    <code>
+                      {cssSample2}
                     </code>
                   </pre>
                 </TabItem>
