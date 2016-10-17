@@ -1,0 +1,42 @@
+.Tabs {}
+
+.Tabs-list {
+    display: flex;
+    margin: 15px 0 -1px;
+    padding: 0;
+}
+
+.Tabs-list li {
+    list-style: none;
+    min-width: 20%;
+    margin: 0;
+    padding: 0;
+}
+
+.Tabs-list li a {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #61DAFB;
+    transition: color 200ms ease;
+}
+
+.Tabs-list li a:hover {
+    color: #222;
+}
+
+.Tabs-list li.is-active a {
+    pointer-events: none;
+    border: thin solid #ccc;
+    border-bottom: none;
+    background: #fff;
+    color: #222;
+}
+
+.Tabs-body {
+    border-top: thin solid #ccc;
+}
