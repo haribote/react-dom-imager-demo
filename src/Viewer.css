@@ -43,21 +43,3 @@
 .Viewer-command p{
     margin: 10px;
 }
-
-.Viewer-command button {
-    appearance: none;
-    margin: 0;
-    padding: 0 10px;
-    border: none;
-    background: #61DAFB;
-    color: #222;
-    font-size: 1rem;
-    line-height: 30px;
-    cursor: pointer;
-    transition: all 200ms ease;
-}
-
-.Viewer-command button:hover {
-    background: #222;
-    color: #61DAFB;;
-}

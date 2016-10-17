@@ -1,6 +1,30 @@
 .App {
 }
 
+.App button {
+  appearance: none;
+  margin: 0;
+  padding: 0 10px;
+  border: none;
+  background: #61DAFB;
+  color: #222;
+  font-size: 1rem;
+  line-height: 30px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.App button:hover {
+  background: #222;
+  color: #61DAFB;;
+}
+
+.App pre code {
+  display: block;
+  background: #eee;
+  padding: 10px;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;

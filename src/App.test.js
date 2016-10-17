@@ -52,6 +52,23 @@ describe('App', () => {
     });
   });
 
+  it('returns new state of isModalVisible', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.instance().reduce('TOGGLE_MODAL_VISIBLE', true)).toEqual({
+      isModalVisible: true
+    });
+    expect(wrapper.instance().reduce('TOGGLE_MODAL_VISIBLE', false)).toEqual({
+      isModalVisible: false
+    });
+  });
+
+  it('returns new state of activeTabItemId', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.instance().reduce('CHANGE_TAB_ITEM', 'test')).toEqual({
+      activeTabItemId: 'test'
+    });
+  });
+
   it('returns current state', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.instance().reduce('UNKNOWN_ACTION', 'test value')).toEqual(wrapper.state());
@@ -62,8 +79,12 @@ describe('App', () => {
     const instance = wrapper.instance();
     instance.dispatch = jest.fn();
     instance._changeHtmlCodeHandler('test value');
-    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls.length).toBe(2);
     expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'TOGGLE_VIEWER_ERROR',
+      payload: false
+    });
+    expect(instance.dispatch.mock.calls[1][0]).toEqual({
       type: 'UPDATE_HTML_CODE',
       payload: 'test value'
     });
@@ -74,8 +95,12 @@ describe('App', () => {
     const instance = wrapper.instance();
     instance.dispatch = jest.fn();
     instance._changeCssCodeHandler('test value');
-    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls.length).toBe(2);
     expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'TOGGLE_VIEWER_ERROR',
+      payload: false
+    });
+    expect(instance.dispatch.mock.calls[1][0]).toEqual({
       type: 'UPDATE_CSS_CODE',
       payload: 'test value'
     });
@@ -90,6 +115,56 @@ describe('App', () => {
     expect(instance.dispatch.mock.calls[0][0]).toEqual({
       type: 'TOGGLE_VIEWER_ERROR',
       payload: true
+    });
+  });
+
+  it('calls dispatch method with TOGGLE_MODAL_VISIBLE action', () => {
+    const wrapper = shallow(<App />);
+    const instance = wrapper.instance();
+    const mockPreventDefaultMethod = jest.fn();
+    const mockStopPropagationMethod = jest.fn();
+    instance.dispatch = jest.fn();
+    instance._clickModalOpenerHandler({
+      preventDefault : mockPreventDefaultMethod,
+      stopPropagation: mockStopPropagationMethod
+    });
+    expect(mockPreventDefaultMethod).toHaveBeenCalled();
+    expect(mockStopPropagationMethod).toHaveBeenCalled();
+    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'TOGGLE_MODAL_VISIBLE',
+      payload: true
+    });
+  });
+
+  it('calls dispatch method with TOGGLE_MODAL_VISIBLE action', () => {
+    const wrapper = shallow(<App />);
+    const instance = wrapper.instance();
+    const mockPreventDefaultMethod = jest.fn();
+    const mockStopPropagationMethod = jest.fn();
+    instance.dispatch = jest.fn();
+    instance._clickModalCloserHandler({
+      preventDefault : mockPreventDefaultMethod,
+      stopPropagation: mockStopPropagationMethod
+    });
+    expect(mockPreventDefaultMethod).toHaveBeenCalled();
+    expect(mockStopPropagationMethod).toHaveBeenCalled();
+    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'TOGGLE_MODAL_VISIBLE',
+      payload: false
+    });
+  });
+
+  it('calls dispatch method with CHANGE_TAB_ITEM action', () => {
+    const wrapper = shallow(<App />);
+    const instance = wrapper.instance();
+    instance.dispatch = jest.fn();
+    instance._clickTabHandler('test');
+    expect(instance.dispatch.mock.calls.length).toBe(1);
+    expect(instance.dispatch.mock.calls[0][0]).toEqual({
+      type: 'CHANGE_TAB_ITEM',
+      payload: 'test'
     });
   });
 });

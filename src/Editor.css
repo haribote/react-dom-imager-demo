@@ -1,4 +1,5 @@
 .Editor {
+    position: relative;
 }
 
 .Editor textarea {
@@ -11,4 +12,19 @@
     background: #202020;
     color: #ccc;
     font-size: 1rem;
+}
+
+.Editor button {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    opacity: 0;
+}
+
+.Editor:hover button,
+.Editor:active button,
+.Editor:focus button,
+.Editor textarea:active + button,
+.Editor textarea:focus + button {
+    opacity: 1;
 }

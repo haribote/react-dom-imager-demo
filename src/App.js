@@ -1,19 +1,26 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import logo from './logo.svg';
+import sampleImage from './sample-image.png';
 import './App.css';
 import { BaseComponent } from './CommonComponent';
 import Viewer from './Viewer';
 import Editor from './Editor';
 import DomImageSvg from './DomImageSvg';
+import Modal from './Modal';
+import Tabs from './Tabs';
+import TabItem from './TabItem';
 
 /**
  * @const action types
- * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string, TOGGLE_VIEWER_ERROR: string}}
+ * @type {{UPDATE_HTML_CODE: string, UPDATE_CSS_CODE: string, TOGGLE_VIEWER_ERROR: string, TOGGLE_MODAL_VISIBLE: string, CHANGE_TAB_ITEM: string}}
  */
 const ACTIONS = {
-  UPDATE_HTML_CODE   : 'UPDATE_HTML_CODE',
-  UPDATE_CSS_CODE    : 'UPDATE_CSS_CODE',
-  TOGGLE_VIEWER_ERROR: 'TOGGLE_VIEWER_ERROR'
+  UPDATE_HTML_CODE    : 'UPDATE_HTML_CODE',
+  UPDATE_CSS_CODE     : 'UPDATE_CSS_CODE',
+  TOGGLE_VIEWER_ERROR : 'TOGGLE_VIEWER_ERROR',
+  TOGGLE_MODAL_VISIBLE: 'TOGGLE_MODAL_VISIBLE',
+  CHANGE_TAB_ITEM     : 'CHANGE_TAB_ITEM'
 };
 
 /**
@@ -28,7 +35,9 @@ class App extends BaseComponent {
     return {
       htmlCode        : '<h1>Hello, world!</h1>',
       cssCode         : 'h1 {\n  color: red;\n}',
-      isViewerDisabled: false
+      isViewerDisabled: false,
+      isModalVisible  : false,
+      activeTabItemId : 'sample-html'
     }
   }
 
@@ -44,9 +53,11 @@ class App extends BaseComponent {
 
     // create actions
     this.actions = {
-      updateHtmlCode   : createAction(ACTIONS.UPDATE_HTML_CODE),
-      updateCssCode    : createAction(ACTIONS.UPDATE_CSS_CODE),
-      toggleViewerError: createAction(ACTIONS.TOGGLE_VIEWER_ERROR)
+      updateHtmlCode    : createAction(ACTIONS.UPDATE_HTML_CODE),
+      updateCssCode     : createAction(ACTIONS.UPDATE_CSS_CODE),
+      toggleViewerError : createAction(ACTIONS.TOGGLE_VIEWER_ERROR),
+      toggleModalVisible: createAction(ACTIONS.TOGGLE_MODAL_VISIBLE),
+      changeTabItem     : createAction(ACTIONS.CHANGE_TAB_ITEM)
     };
 
     // bind context
@@ -54,7 +65,10 @@ class App extends BaseComponent {
       'dispatch',
       '_changeHtmlCodeHandler',
       '_changeCssCodeHandler',
-      '_errorViewerHandler'
+      '_errorViewerHandler',
+      '_clickModalOpenerHandler',
+      '_clickModalCloserHandler',
+      '_clickTabHandler'
     );
   }
 
@@ -94,6 +108,16 @@ class App extends BaseComponent {
         isViewerDisabled: !!payload
       };
 
+    case ACTIONS.TOGGLE_MODAL_VISIBLE:
+      return {
+        isModalVisible: !!payload
+      };
+
+    case ACTIONS.CHANGE_TAB_ITEM:
+      return {
+        activeTabItemId: payload
+      };
+
     default:
       return this.state;
     }
@@ -105,7 +129,7 @@ class App extends BaseComponent {
    */
   render() {
     // cache
-    const { htmlCode, cssCode, isViewerDisabled } = this.state;
+    const { htmlCode, cssCode, isViewerDisabled, isModalVisible, activeTabItemId } = this.state;
 
     // JSX template
     return (
@@ -117,10 +141,45 @@ class App extends BaseComponent {
         <div className="App-main">
           <Viewer className="App-column" svg={this.renderSvg()} isDisabled={isViewerDisabled} onError={this._errorViewerHandler} />
           <div className="App-column">
-            <Editor className="HtmlEditor" name="html" value={htmlCode} onChange={this._changeHtmlCodeHandler} />
-            <Editor className="CssEditor" name="css" value={cssCode} onChange={this._changeCssCodeHandler} />
+            <Editor className="HtmlEditor" name="html" value={htmlCode} onChange={this._changeHtmlCodeHandler}>
+              <button onClick={this._clickModalOpenerHandler}>Samples</button>
+            </Editor>
+            <Editor className="CssEditor" name="css" value={cssCode} onChange={this._changeCssCodeHandler}>
+              <button onClick={this._clickModalOpenerHandler}>Samples</button>
+            </Editor>
           </div>
         </div>
+        <ReactCSSTransitionGroup
+          transitionName="fade-transition"
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}
+        >
+          {isModalVisible && (
+            <Modal onClickCloser={this._clickModalCloserHandler}>
+              <Tabs active={activeTabItemId} onClickTab={this._clickTabHandler}>
+                <TabItem id="sample-html" title="HTML">
+                  <pre>
+                    <code>
+                      {App.initialState.htmlCode}
+                    </code>
+                  </pre>
+                </TabItem>
+                <TabItem id="sample-css" title="CSS">
+                  <pre>
+                    <code>
+                      {App.initialState.cssCode}
+                    </code>
+                  </pre>
+                </TabItem>
+                <TabItem id="sample-image" title="Image">
+                  <div className="Sample-image">
+                    <img src={sampleImage} width={400} height={382} alt="Trick or treat" style={{ maxWidth: '100%' }} />
+                  </div>
+                </TabItem>
+              </Tabs>
+            </Modal>
+          )}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -175,6 +234,51 @@ class App extends BaseComponent {
 
     // dispatch action
     dispatch(actions.toggleViewerError(true));
+  }
+
+  /**
+   * @listen click on Modal Opener
+   * @param ev
+   * @private
+   */
+  _clickModalOpenerHandler(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.toggleModalVisible(true));
+  }
+
+  /**
+   * @listen click on Modal Closer
+   * @param ev
+   * @private
+   */
+  _clickModalCloserHandler(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.toggleModalVisible(false));
+  }
+
+  /**
+   * @listen click on (.Tabs-list a)
+   * @param id
+   * @private
+   */
+  _clickTabHandler(id) {
+    // cache
+    const { dispatch, actions } = this;
+
+    // dispatch action
+    dispatch(actions.changeTabItem(id));
   }
 }
 

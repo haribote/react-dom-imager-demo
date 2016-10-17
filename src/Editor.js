@@ -40,12 +40,13 @@ export default class Editor extends CommonComponent {
    */
   render() {
     // cache
-    const { className, name, value } = this.props;
+    const { className, name, value, children } = this.props;
 
     // JSX Template
     return (
       <form action="" method="GET" className={classNames('Editor', className)} onSubmit={this._submitHandler}>
         <textarea name={name} cols="30" rows="10" value={value} onChange={this._changeHandler} />
+        {children}
       </form>
     );
   }
