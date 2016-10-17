@@ -147,6 +147,7 @@ class App extends BaseComponent {
     const { dispatch, actions } = this;
 
     // dispatch action
+    dispatch(actions.toggleViewerError(false));
     dispatch(actions.updateHtmlCode(value));
   }
 
@@ -160,6 +161,7 @@ class App extends BaseComponent {
     const { dispatch, actions } = this;
 
     // dispatch action
+    dispatch(actions.toggleViewerError(false));
     dispatch(actions.updateCssCode(value));
   }
 
