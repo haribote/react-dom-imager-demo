@@ -14,7 +14,10 @@ export default class Tabs extends CommonComponent {
     return {
       active  : PropTypes.string.isRequired,
       onClickTab: PropTypes.func.isRequired,
-      children: PropTypes.element.isRequired
+      children: PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.arrayOf(PropTypes.element)
+      ]).isRequired
     }
   }
 
